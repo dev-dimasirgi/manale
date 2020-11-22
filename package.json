@@ -1,0 +1,25 @@
+{
+  "name": "manale",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-dimasirgi/manale.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dev-dimasirgi/manale/issues"
+  },
+  "homepage": "https://github.com/dev-dimasirgi/manale#readme",
+  "dependencies": {
+    "request": "^2.88.2",
+    "venom-bot": "^2.0.23",
+    "xlsx": "^0.16.9"
+  }
+}
