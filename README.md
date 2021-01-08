@@ -3,13 +3,13 @@ whatsapp assistant
 
 chat coming and noted in json file
 
-**start**
+# start
 
 move to folder manale project
 
 npm install
 
-**running**
+# running
 
 node app.js
 
