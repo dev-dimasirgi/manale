@@ -1,8 +1,6 @@
 const venom = require('venom-bot');
-const xlsx = require('xlsx');
 const path = require('path');
 const fs = require('fs');
-const mime = require('mime-types');
 
 // for date human
 const timestampToDate = (tm) => {
