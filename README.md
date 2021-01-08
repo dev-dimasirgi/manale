@@ -7,6 +7,10 @@ chat coming and noted in json file
 
 move to folder manale project
 
+create folder **json**
+
+create file **chattome.json** in folder **json**
+
 npm install
 
 # running
