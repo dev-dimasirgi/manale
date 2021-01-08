@@ -1,6 +1,7 @@
 const venom = require('venom-bot');
 const path = require('path');
 const fs = require('fs');
+const mime = require('mime-types');
 
 // for date human
 const timestampToDate = (tm) => {
@@ -40,73 +41,79 @@ const arrayToJSONObject = (arr) => {
 
 // venom create client and authenticating
 venom.create(
-    'sessionName',
-    (base64Qr, asciiQR) => {
-        console.log(asciiQR);
-        const matches = base64Qr.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/),
-            response = {};
-
-        if (matches.length !== 3) {
-            return new Error('Invalid input string');
+        'sessionName',
+        (base64Qrimg, asciiQR, attempts, urlCode) => {
+        },
+        (statusSession, session) => {
+            console.log('Status session: ', statusSession);
+            console.log('Session name: ', session);
+        },
+        {
+            folderNameToken: 'tokens',
+            mkdirFolderToken: '/node_modules',
+            headless: true,
+            disableWelcome: true,
         }
-        response.type = matches[1];
-        response.data = new Buffer.from(matches[2], 'base64');
-        const imageBuffer = response;
-        const saveImages = path.relative(__dirname, "images");
-        if (!fs.existsSync(saveImages)) {
-            fs.mkdirSync(saveImages);
-        }
-        // create qr png
-        fs.writeFile(
-            `${saveImages}${path.sep}qr.png`,
-            imageBuffer['data'],
-            'binary',
-            (ferr) => {
-                if (ferr != null) {
-                    console.log(ferr);
-                }
-            }
-        );
-    },
-    undefined,
-    { logQR: false }
-)
+    )
     .then((client) => startClientVenom(client))
     .catch((verr) => console.log(verr));
-
-// function async
 
 // start client venom
 const startClientVenom = async (client) => {
 
-    // variable for xlsx file
-    var logMessage = [];
-    const headerFile = ["ID", "TIME", "SENDER", "NAME SENDER", "RECEIVER", "NAME RECEIVER", "BODY", "IMAGES", "SENDER PICT"];
-    const dateNow = getDateNow();
+    // variabel for save message
+    let logMessage = [];
 
     // message incoming
     client.onMessage(async (msg) => {
         // if message not from group chat and dont broadcast
         if (msg.isGroupMsg === false && msg.from != "status@broadcast") {
 
-            const id = msg.t + onlyNumber(msg.sender.id);
-            const time = timestampToDate(msg.t);
-            const sender = onlyNumber(msg.sender.id);
-            const senderName = msg.sender.formattedName;
-            const receiver = onlyNumber(msg.to);
-            const receiverName = "Me";
-            const body = msg.body;
-            const imgInChat = "-";
-            const senderPict = msg.sender.profilePicThumbObj.imgFull;
+            // add initial data to variable
+            let id = msg.t + onlyNumber(msg.sender.id);
+            let time = timestampToDate(msg.t);
+            let sender = onlyNumber(msg.sender.id);
+            let senderName = msg.sender.formattedName;
+            let receiver = onlyNumber(msg.to);
+            let receiverName = "Me";
+            let body = msg.body;
+            let imgInChat = "-";
+            let senderPict = msg.sender.profilePicThumbObj.imgFull;
+            let mediaStatus = msg.isMedia;
 
             __dirname;
-            // add recent data to variable logMessage
-            logMessage.push([id, time, sender, senderName, receiver, receiverName, body, imgInChat, senderPict]);
 
+            // if chat with media
+            // create folder for media
+            const folderImage = path.relative(__dirname, "images");
+            if (!fs.existsSync(folderImage)) {
+                fs.mkdirSync(folderImage);
+            }
+            const saveFolderProfileImages = path.relative(__dirname, "images/media");
+            if (!fs.existsSync(saveFolderProfileImages)) {
+                fs.mkdirSync(saveFolderProfileImages);
+            }
+            // save media
+            if (msg.isMedia === true || msg.isMMS === true) {
+                body = msg.caption;
+                const buffer = await client.decryptFile(msg);
+                // At this point you can do whatever you want with the buffer
+                // Most likely you want to write it into a file
+                const fileName = `${saveFolderProfileImages}${path.sep}${msg.t}.${sender}.media.${mime.extension(msg.mimetype)}`;
+                imgInChat = fileName;
+                await fs.writeFileSync(fileName, buffer, (err) => {
+                    console.log(err)
+                });
+            }
+
+            // show basic information to console
             console.log("---------------------------------");
             console.log("Waktu: ", time);
             console.log("Dari: ", senderName);
             console.log("Pesan: ", body);
+            if (mediaStatus === true) {
+                console.log("Media : ", imgInChat);
+            }
             console.log("---------------------------------");
 
             // check exists folder json
@@ -115,13 +122,20 @@ const startClientVenom = async (client) => {
                 fs.mkdirSync(saveFolderJson);
             }
 
+            // check exists file json
+            if (!fs.existsSync("json/chattome.json")) {
+                fs.closeSync(fs.openSync("json/chattome.json", "w"));
+            }
+
             // read data from file json
             fs.readFile(`${saveFolderJson}${path.sep}chattome.json`, 'utf8', function readFileCallback(err, data) {
                 if (err) {
                     console.log(err);
                 } else {
-                    // add data to log message 
-                    logMessage = JSON.parse(data);
+                    // add data to log message
+                    if (!data == undefined) {
+                        logMessage = JSON.parse(data);
+                    }
                     logMessage.push({
                         id: id,
                         time: time,

@@ -1,7 +1,8 @@
 .DS_Store
+
 node_modules/
-doc/
 tokens/
 json/
 images/
+
 .package-lock.json

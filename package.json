@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/dev-dimasirgi/manale#readme",
   "dependencies": {
+    "mime-types": "^2.1.28",
     "request": "^2.88.2",
     "venom-bot": "^2.0.23"
   }
