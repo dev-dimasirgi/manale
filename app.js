@@ -105,32 +105,6 @@ const startClientVenom = async (client) => {
             // add recent data to variable logMessage
             logMessage.push([id, time, sender, senderName, receiver, receiverName, body, imgInChat, senderPict]);
 
-            // in chat media TAPI MASIH PR
-            // if (msg.isMedia === true || msg.isMSS === true) {
-            //     console.log("Media true");
-            //     const bufferImgInChat = await client.decryptFile(msg);
-            //     console.log("Buffer file: ", bufferImgInChat);
-            //     console.log(mime.extension(msg.mimetype));
-            //     body = msg.caption;
-            //     imgInChat = fileImgInChat;
-
-            //     // create folder images
-            //     const saveFolderImages = path.relative(__dirname, "images/chat");
-            //     if (!fs.existsSync(saveFolderImages)) {
-            //         fs.mkdirSync(saveFolderImages);
-            //     }
-            //     console.log("Proses folder after");
-
-            //     const fileImgInChat = `${saveFolderImages}${path.sep}images.dateNow.sender.${mime.extension(msg.mimetype)}`;
-
-            //     // create file images
-            //     await fs.writeFile(fileImgInChat, bufferImgInChat, (merr) => {
-            //         console.log(merr);
-            //     });
-            // }else{
-            //     console.log("Media false");
-            // }
-
             console.log("---------------------------------");
             console.log("Waktu: ", time);
             console.log("Dari: ", senderName);
@@ -167,31 +141,6 @@ const startClientVenom = async (client) => {
                     })
                 }
             })
-
-            // for create xlsx file
-            // const rows = [headerFile, ...logMessage];
-            // const sheets = xlsx.utils.book_new();
-            // sheets.Props = {
-            //     Title: "Manale Application",
-            //     Author: "Dimas Irgiansyah Pratama",
-            //     CreatedDate: new Date(),
-            // }
-            // sheets.SheetNames.push("Chat Log");
-            // const sheetsData = xlsx.utils.aoa_to_sheet(rows);
-            // sheets.Sheets["Chat Log"] = sheetsData;
-
-            // // if folder not exists, system create new folder
-            // const saveFolder = path.relative(__dirname, "doc");
-            // if (!fs.existsSync(saveFolder)) {
-            //     fs.mkdirSync(saveFolder);
-            // }
-            // try {
-            //     // create file
-            //     xlsx.writeFile(sheets, `${saveFolder}${path.sep}chat.${dateNow}.xlsx`);
-            // } catch (e) {
-            //     console.log(e.message);;
-            //     throw e;
-            // }
         }
     })
 }
