@@ -4,3 +4,4 @@ doc/
 tokens/
 json/
 images/
+.package-lock.json
