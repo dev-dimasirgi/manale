@@ -1,7 +1,11 @@
 # manale
 whatsapp assistant
 
-chat coming and noted in json file
+# fitur
+| ---------------------------------------------------------- | --- |
+| Download media in chat                                     | ✔   |
+| Auto download photo profile                                | ✔   |
+| Data save in json file                                     | ✔   |
 
 # start
 
