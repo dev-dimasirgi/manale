@@ -1,7 +1,8 @@
 # manale
 whatsapp assistant
 
-# fitur
+## fitur
+|                                                            |     |
 | ---------------------------------------------------------- | --- |
 | Download media in chat                                     | ✔   |
 | Auto download photo profile                                | ✔   |
